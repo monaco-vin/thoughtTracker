@@ -1,19 +1,24 @@
 const express = require("express");
+const fs = require("fs");
+const notes = require("./db/db.json");
+const path = require("path");
+const uuid = require("uuid");
+const { DH_CHECK_P_NOT_SAFE_PRIME } = require("constants");
 
 const app = express();
+var PORT = process.env.PORT || 4023;
 
-const PORT = process.env.PORT || 8080;
-
+// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static("./public/"));
+app.use(express.static("public"));
 
-require("./routes/apiRoutes")(app);
-require("./routes/htmlRoutes")(app);
-
-app.listen(PORT, function () {
-  console.log("App listening on PORT: " + PORT);
+//Setting routes for APIs
+//This gets notes saved and joins it in db.json
+app.get("/api/notes", (req, res) => {
+  res.sendFile(path.join(__dirname, "/db/db.json"));
 });
+
 /* 
 make routes file w/ apiRoutes.js and htmlRoute.js
 create html routes so that  GET /notes returns a notes.html file
